@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+<h2>{{ the_title }}</h2>
+
+<form method='POST' action='search4'>
+    <table>
+        <p>Используйте форму для отправки запрса</p>
+        <tr><td>Выражение:</td><td><input name='phrase' type='TEXT' width="60"></td></tr>
+        <tr><td>Символы:</td><td><input name='letters' type='TEXT' value="aeiou"></td></tr>
+    </table>
+    <p>Проверить:</p>
+    <p><input value="Do it!" type='submit'></p>
+
+</form>
+
+{% endblock %}

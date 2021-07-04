@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block body %}
+
+<h2>{{ the_title }}</h2>
+
+<p>Данные</p>
+<table>
+    <tr><td>Выражение:</td><td>{{ the_phrase }}</td></tr>
+    <tr><td>Символы:</td><td></td>{{ the_letters }}</tr>
+</table>
+<p>Результат</p>
+<h3>{{ the_results }}</h3>
+
+{% endblock %}
