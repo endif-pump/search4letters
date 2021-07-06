@@ -1,5 +1,15 @@
 from flask import Flask, render_template, request, redirect, escape
 from vsearch import search4letters
+from DBcm import UseDatabase
+import pymysql
+
+dbconfig = {
+    'host': '172.17.0.2',
+    'user': 'root',
+    'password': 'my-secret-pw',
+    'database': 'searchlogDB',
+} 
+
 
 
 app = Flask(__name__)
@@ -28,11 +38,19 @@ def view_log() -> str:
     return escape(contents)
 
 def log_request(req: 'flask_request', res: str) -> None:
-    with open('searchlog', 'a') as log:
-        print(req.form,  file=log, end='|')
-        print(req.remote_addr,  file=log, end='|')
-        print(req.user_agent,  file=log, end='|')
-        print(res,  file=log)
+    with UseDatabase(dbconfig) as cursor:
+
+        _SQL = """insert into log
+                  (phrase, letters, ip, browser_string, results)
+                  values
+                  (%s, %s, %s, %s, %s)"""
+    
+        cursor.execute(_SQL, (req.form['phrase'],
+                          req.form['letters'],
+                          req.remote_addr,
+                          req.user_agent.browser,
+                          res, ))
+
 
 if __name__ == '__main__':
     app.run(debug=True)
