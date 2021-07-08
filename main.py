@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, escape, session
 from vsearch import search4letters
 from DBcm import UseDatabase
+from decorator_auth import check_logged_in
 import pymysql
 
 dbconfig = {
@@ -11,6 +12,16 @@ dbconfig = {
 }
 
 app = Flask(__name__)
+
+@app.route('/login')
+def login():
+    session['auth'] = True
+    return 'Nice, you are logged in'
+
+@app.route('/logout')
+def logout():
+    session.pop('auth')
+    return 'Thx'
 
 
 @app.route('/search4', methods=['POST'])
@@ -29,6 +40,7 @@ def entry_page():
 
 
 @app.route('/logs')
+@check_logged_in
 def view_log() -> str:
     contents = ''
     with UseDatabase(dbconfig) as cursor:
@@ -57,6 +69,7 @@ def log_request(req: 'flask_request', res: str) -> None:
             res,
         ))
 
+app.secret_key = 'qwerty123'
 
 if __name__ == '__main__':
     app.run(debug=True)
